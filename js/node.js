@@ -20,6 +20,8 @@ function Node(position, index){
     this.externalForce = null;
     this.fixed = false;
 
+    this.mag = new THREE.Vector3(0,0,0);
+
     // this.render(new THREE.Vector3(0,0,0));
 }
 
@@ -57,6 +59,26 @@ Node.prototype.getExternalForce = function(){
     if (!this.externalForce) return new THREE.Vector3(0,0,0);
     return this.externalForce.getForce();
 };
+
+Node.prototype.getMagneticForce = function() {
+    other_node = new Node(new THREE.Vector3(0,0,0), 9999);
+    other_node.mag = new THREE.Vector3(5, 5, 5);
+    p = new THREE.Vector3(this.getOriginalPosition().x - other_node.getOriginalPosition().x, this.getOriginalPosition().y - other_node.getOriginalPosition().y, this.getOriginalPosition().z - other_node.getOriginalPosition().z);
+    p_unit = p.clone().normalize();
+
+    m1 = this.mag;
+    m2 = other_node.mag;
+
+    K = (3.0*Math.pow(0.1, 7)) / Math.pow(p.length(), 4);
+
+    f1 = m2.multiplyScalar(m1.dot(p_unit)*K);
+    f2 = m1.multiplyScalar(m2.dot(p_unit));
+    f3 = p_unit.multiplyScalar(m1.dot(m2));
+    f4 = p_unit.multiplyScalar(m1.dot(p_unit)*m2.dot(p_unit)*5);
+    f1.add(f2).add(f3).sub(f4);
+
+    return f1;
+}
 
 Node.prototype.addCrease = function(crease){
     this.creases.push(crease);

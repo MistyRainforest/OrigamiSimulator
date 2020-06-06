@@ -450,6 +450,12 @@ function initDynamicSolver(globals){
         globals.gpuMath.initTextureFromData("u_externalForces", textureDim, textureDim, "FLOAT", externalForces, true);
     }
 
+    function updateMagneticForces() {
+        for (var i=0;i<nodes.length;i++) {
+        }
+        console.log("placeholder");
+    }
+
     function updateFixed(){
         for (var i=0;i<nodes.length;i++){
             mass[4*i+1] = (nodes[i].isFixed() ? 1 : 0);
@@ -652,6 +658,7 @@ function initDynamicSolver(globals){
         updateMaterials(true);
         updateFixed();
         updateExternalForces();
+        //updateMagneticForces();
         updateCreasesMeta(true);
         updateCreaseVectors();
         setCreasePercent(globals.creasePercent);
