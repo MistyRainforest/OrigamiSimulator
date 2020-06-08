@@ -72,7 +72,6 @@ function initDynamicSolver(globals){
     }
 
     function solve(_numSteps){
-
         if (globals.shouldAnimateFoldPercent){
             globals.creasePercent = globals.videoAnimator.nextFoldAngle(0);
             globals.controls.updateCreasePercent();
@@ -123,6 +122,7 @@ function initDynamicSolver(globals){
 
         if (_numSteps === undefined) _numSteps = globals.numSteps;
         for (var j=0;j<_numSteps;j++){
+            updateExternalForces();
             solveStep();
         }
         render();
@@ -442,7 +442,7 @@ function initDynamicSolver(globals){
 
     function updateExternalForces(){
         for (var i=0;i<nodes.length;i++){
-            var externalForce = nodes[i].getExternalForce();
+            var externalForce = nodes[i].getMagneticForces();
             externalForces[4*i] = externalForce.x;
             externalForces[4*i+1] = externalForce.y;
             externalForces[4*i+2] = externalForce.z;
@@ -669,6 +669,7 @@ function initDynamicSolver(globals){
         updateFixed: updateFixed,
         solve: solve,
         render: render,
-        reset: reset
+        reset: reset,
+        getAvgPosition: getAvgPosition
     }
 }

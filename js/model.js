@@ -18,6 +18,7 @@ function initModel(globals){
     var cutLines = new THREE.LineSegments(null, lineMaterial);
     var facetLines = new THREE.LineSegments(null, lineMaterial);
     var borderLines = new THREE.LineSegments(null, lineMaterial);
+    var magNode = new Node(new THREE.Vector3(0,0,0), 0);
 
     var lines = {
         U: hingeLines,
@@ -385,6 +386,10 @@ function initModel(globals){
         return nodes;
     }
 
+    function getMagNode() {
+        return magNode;
+    }
+
     function getEdges(){
         return edges;
     }
@@ -401,6 +406,19 @@ function initModel(globals){
         geometry.computeBoundingBox();
         return geometry.boundingBox.max.clone().sub(geometry.boundingBox.min);
     }
+    function getAvgPosition(){
+        var xavg = 0;
+        var yavg = 0;
+        var zavg = 0;
+        for (var i=0;i<positions.length;i+=3){
+            xavg += positions[i];
+            yavg += positions[i+1];
+            zavg += positions[i+2];
+        }
+        var avgPosition = new THREE.Vector3(xavg, yavg, zavg);
+        avgPosition.multiplyScalar(3/positions.length);
+        return avgPosition;
+    }
 
     return {
         pause: pause,
@@ -409,6 +427,7 @@ function initModel(globals){
         step: step,
 
         getNodes: getNodes,
+        getMagNode: getMagNode,
         getEdges: getEdges,
         getFaces: getFaces,
         getCreases: getCreases,
@@ -416,6 +435,7 @@ function initModel(globals){
         getPositionsArray: getPositionsArray,
         getColorsArray: getColorsArray,
         getMesh: getMesh,
+        getAvgPosition: getAvgPosition,
 
         buildModel: buildModel,//load new model
         sync: sync,//update geometry to new model

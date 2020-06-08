@@ -61,9 +61,13 @@ Node.prototype.getExternalForce = function(){
 };
 
 Node.prototype.getMagneticForce = function() {
-    other_node = new Node(new THREE.Vector3(0,0,0), 9999);
-    other_node.mag = new THREE.Vector3(5, 5, 5);
-    p = new THREE.Vector3(this.getOriginalPosition().x - other_node.getOriginalPosition().x, this.getOriginalPosition().y - other_node.getOriginalPosition().y, this.getOriginalPosition().z - other_node.getOriginalPosition().z);
+    other_node = globals.model.getMagNode();
+    other_node.mag = new THREE.Vector3(1, 1, 1);
+    avgPos = globals.model.getAvgPosition();
+    this.mag.x = 200;
+    p = new THREE.Vector3(this.getPosition().x - (other_node._originalPosition.x + avgPos.x),
+     this.getPosition().y - (other_node._originalPosition.y + avgPos.y),
+      this.getPosition().z - (other_node._originalPosition.z + avgPos.z));
     p_unit = p.clone().normalize();
 
     m1 = this.mag;
