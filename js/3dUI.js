@@ -50,6 +50,8 @@ function init3DUI(globals) {
         mouse.y = - (e.clientY/window.innerHeight)*2+1;
         raycaster.setFromCamera(mouse, globals.threeView.camera);
 
+
+        //Mag Integration Comment: The drag function here fixes and manually moves the selected node elsewhere
         var _highlightedObj = null;
         if (!isDragging) {
             _highlightedObj = checkForIntersections(e, globals.model.getMesh());

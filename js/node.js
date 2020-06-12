@@ -47,14 +47,14 @@ Node.prototype.isFixed = function(){
 
 
 //forces
-
+//Mag Integration Comment: addition of external force removed by creator?
 Node.prototype.addExternalForce = function(force){
     // this.externalForce = force;
     // var position = this.getOriginalPosition();
     // this.externalForce.setOrigin(position);
     // if (this.fixed) this.externalForce.hide();
 };
-
+//Mag Integration Comment: this.externalForce is never set, always returns 0 vector
 Node.prototype.getExternalForce = function(){
     if (!this.externalForce) return new THREE.Vector3(0,0,0);
     return this.externalForce.getForce();
@@ -62,9 +62,11 @@ Node.prototype.getExternalForce = function(){
 
 Node.prototype.getMagneticForce = function() {
     other_node = globals.model.getMagNode();
-    other_node.mag = new THREE.Vector3(1, 1, 1);
-    avgPos = globals.model.getAvgPosition();
-    this.mag.x = 200;
+    //other_node.mag = new THREE.Vector3(1, 1, 1);
+    other_node.mag = this.getPosition();
+    //avgPos = globals.model.getAvgPosition();
+    avgPos = new THREE.Vector3(0, 0, 0);
+    this.mag = this.getPosition().multiplyScalar(1);
     p = new THREE.Vector3(this.getPosition().x - (other_node._originalPosition.x + avgPos.x),
      this.getPosition().y - (other_node._originalPosition.y + avgPos.y),
       this.getPosition().z - (other_node._originalPosition.z + avgPos.z));
@@ -81,7 +83,7 @@ Node.prototype.getMagneticForce = function() {
     f4 = p_unit.multiplyScalar(m1.dot(p_unit)*m2.dot(p_unit)*5);
     f1.add(f2).add(f3).sub(f4);
 
-    return f1;
+    return f1.multiplyScalar(1);
 }
 
 Node.prototype.addCrease = function(crease){
