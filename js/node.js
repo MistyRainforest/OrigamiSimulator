@@ -19,6 +19,7 @@ function Node(position, index){
     this.invCreases = [];
     this.externalForce = null;
     this.fixed = false;
+    this.magnetized = 0;
 
     this.mag = new THREE.Vector3(0,0,0);
 
@@ -61,19 +62,21 @@ Node.prototype.getExternalForce = function(){
 };
 
 Node.prototype.getMagneticForce = function() {
-    other_node = globals.model.getMagNode();
-    //other_node.mag = new THREE.Vector3(1, 1, 1);
-    other_node.mag = this.getPosition();
-    //avgPos = globals.model.getAvgPosition();
-    avgPos = new THREE.Vector3(0, 0, 0);
+    if (globals.model.magNode == this.getIndex()) {
+        return new THREE.Vector3(0,0,0);
+    }
+    otherNode = globals.model.getNodes()[globals.model.magNode];
+    otherNode.mag = this.getPosition().sub(otherNode.getPosition()).normalize();
+    this.mag = otherNode.mag.multiplyScalar(-1);
     this.mag = this.getPosition().multiplyScalar(1);
-    p = new THREE.Vector3(this.getPosition().x - (other_node._originalPosition.x + avgPos.x),
-     this.getPosition().y - (other_node._originalPosition.y + avgPos.y),
-      this.getPosition().z - (other_node._originalPosition.z + avgPos.z));
+    p = new THREE.Vector3(this.getPosition().x - (otherNode.getPosition().x),
+        this.getPosition().y - otherNode.getPosition().y,
+        this.getPosition().z - otherNode.getPosition().z);
     p_unit = p.clone().normalize();
-
+    //console.log(otherNode);
+    //onsole.log(this);
     m1 = this.mag;
-    m2 = other_node.mag;
+    m2 = otherNode.mag;
 
     K = (3.0*Math.pow(0.1, 7)) / Math.pow(p.length(), 4);
 
@@ -82,8 +85,7 @@ Node.prototype.getMagneticForce = function() {
     f3 = p_unit.multiplyScalar(m1.dot(m2));
     f4 = p_unit.multiplyScalar(m1.dot(p_unit)*m2.dot(p_unit)*5);
     f1.add(f2).add(f3).sub(f4);
-
-    return f1.multiplyScalar(1);
+    return f1.multiplyScalar(globals.magStrength*50000).multiplyScalar(this.magnetized);
 }
 
 Node.prototype.addCrease = function(crease){

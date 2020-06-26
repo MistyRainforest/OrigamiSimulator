@@ -456,6 +456,16 @@ function initControls(globals){
         globals.shouldChangeCreasePercent = true;
         updateCreasePercent();
     });
+
+    setSliderInput("#magStrength", globals.magStrength, 0, 100, 1, function(val){
+        globals.magStrength = val;
+    })
+
+    var creasePercentSlider = setSliderInput("#creasePercent", globals.creasePercent*100, -100, 100, 1, function(val){
+        globals.creasePercent = val/100;
+        globals.shouldChangeCreasePercent = true;
+        updateCreasePercent();
+    });
     var creasePercentNavSlider = setSlider("#creasePercentNav>div", globals.creasePercent*100, -100, 100, 1, function(val){
         globals.creasePercent = val/100;
         globals.shouldChangeCreasePercent = true;
@@ -652,6 +662,7 @@ function initControls(globals){
     setLink("#reset", function(){
         if (!globals.simulationRunning) $("#reset").hide();
         globals.model.reset();
+        globals.fixedHasChanged = true;
     });
     setLink("#resetBottom", function(){
         globals.model.reset();
@@ -680,6 +691,21 @@ function initControls(globals){
             globals.UI3D.hideHighlighters();
         }
     }
+    setCheckbox($("#nodeFixingEnabled"), globals.nodeFixingEnabled, enableNodeFixing);
+
+    function enableNodeFixing(val){
+        globals.nodeFixingEnabled = val;
+        enableInteraction(val);
+    }
+    setCheckbox($("#magnetizeEnabled"), globals.magnetizeEnabled, enableMagnetize);
+
+    function enableMagnetize(val){
+        globals.magnetizeEnabled = val;
+        if (val == true) {
+            enableInteraction(val);
+        }
+    }
+
     setLink("#grabToggle", function(){
         enableInteraction(true);
     });

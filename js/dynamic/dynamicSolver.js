@@ -103,6 +103,7 @@ function initDynamicSolver(globals){
             setCreasePercent(globals.creasePercent);
             globals.shouldChangeCreasePercent = false;
         }
+
         // if (globals.shouldZeroDynamicVelocity){
         //     globals.gpuMath.step("zeroTexture", [], "u_velocity");
         //     globals.gpuMath.step("zeroTexture", [], "u_lastVelocity");
@@ -122,8 +123,7 @@ function initDynamicSolver(globals){
 
         if (_numSteps === undefined) _numSteps = globals.numSteps;
         for (var j=0;j<_numSteps;j++){
-            //updateExternalForces();
-            console.log(nodes[0].getMagneticForce().x);
+            updateExternalForces();
             //Mag Integration Comment: All the steps are handled by gpuMath, injecting additional forces outside results in 
             //weird behavior.
             solveStep();
@@ -446,6 +446,7 @@ function initDynamicSolver(globals){
     function updateExternalForces(){
         for (var i=0;i<nodes.length;i++){
             var externalForce = nodes[i].getMagneticForce();
+            //var externalForce = new THREE.Vector3(0,0,0);
             externalForces[4*i] = externalForce.x;
             externalForces[4*i+1] = externalForce.y;
             externalForces[4*i+2] = externalForce.z;

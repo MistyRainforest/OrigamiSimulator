@@ -18,7 +18,7 @@ function initModel(globals){
     var cutLines = new THREE.LineSegments(null, lineMaterial);
     var facetLines = new THREE.LineSegments(null, lineMaterial);
     var borderLines = new THREE.LineSegments(null, lineMaterial);
-    var magNode = new Node(new THREE.Vector3(0,0,0), 0);
+    var magNode = 0;
 
     var lines = {
         U: hingeLines,
@@ -167,6 +167,10 @@ function initModel(globals){
     function reset(){
         getSolver().reset();
         setGeoUpdates();
+        for (var i=0;i<nodes.length;i++){
+            nodes[i].fixed = false;
+        }
+        
     }
 
     function step(numSteps){
@@ -386,9 +390,6 @@ function initModel(globals){
         return nodes;
     }
 
-    function getMagNode() {
-        return magNode;
-    }
 
     function getEdges(){
         return edges;
@@ -425,9 +426,9 @@ function initModel(globals){
         resume: resume,
         reset: reset,
         step: step,
+        magNode: magNode,
 
         getNodes: getNodes,
-        getMagNode: getMagNode,
         getEdges: getEdges,
         getFaces: getFaces,
         getCreases: getCreases,

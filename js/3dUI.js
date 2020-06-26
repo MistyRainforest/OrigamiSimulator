@@ -27,7 +27,10 @@ function init3DUI(globals) {
     document.addEventListener('mouseup', function(e){
         isDragging = false;
         if (draggingNode){
-            draggingNode.setFixed(draggingNodeFixed);
+            if(!globals.nodeFixingEnabled) {
+                draggingNode.setFixed(draggingNodeFixed);
+                globals.fixedHasChanged = true;
+            }
             draggingNode = null;
             globals.fixedHasChanged = true;
             globals.threeView.enableControls(true);
@@ -58,6 +61,10 @@ function init3DUI(globals) {
             setHighlightedObj(_highlightedObj);
         }  else if (isDragging && highlightedObj){
             if (!draggingNode) {
+                if (globals.magnetizeEnabled) {
+                    highlightedObj.magnetized = 1;
+                }
+                globals.model.magNode = highlightedObj.getIndex();
                 draggingNode = highlightedObj;
                 draggingNodeFixed = draggingNode.isFixed();
                 draggingNode.setFixed(true);

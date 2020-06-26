@@ -51,6 +51,7 @@ function initGlobals(){
         creaseStiffness: 0.7,
         panelStiffness: 0.7,
         faceStiffness: 0.2,
+        magStrength: 0,
 
         //dynamic sim settings
         percentDamping: 0.45,//damping ratio
@@ -81,6 +82,8 @@ function initGlobals(){
         pausedForPatternView: false,
 
         userInteractionEnabled: false,
+        nodeFixingEnabled: false,
+        magnetizeEnabled: false,
         vrEnabled: false,
 
         numSteps: 100,
