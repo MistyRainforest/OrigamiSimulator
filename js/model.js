@@ -70,6 +70,7 @@ function initModel(globals){
     var colors;//place to store buffer geo vertex colors
     var indices;
     var nodes = [];
+    var highlights = [];
     var faces = [];
     var edges = [];
     var creases = [];
@@ -242,6 +243,7 @@ function initModel(globals){
 
         fold = nextFold;
         nodes = [];
+        highlights = [];
         edges = [];
         faces = fold.faces_vertices;
         creases = [];
@@ -256,6 +258,9 @@ function initModel(globals){
 
         for (var i=0;i<_vertices.length;i++){
             nodes.push(new Node(_vertices[i].clone(), nodes.length));
+            highlight = new THREE.Mesh(new THREE.SphereGeometry(0.02,20), new THREE.MeshBasicMaterial({color: 0xff0000, opacity:0, transparent:true}));
+            globals.threeView.scene.add(highlight);
+            highlights.push(highlight);
         }
         // _nodes[_faces[0][0]].setFixed(true);
         // _nodes[_faces[0][1]].setFixed(true);
@@ -390,6 +395,10 @@ function initModel(globals){
         return nodes;
     }
 
+    function getHighlights(){
+        return highlights;
+    }
+
 
     function getEdges(){
         return edges;
@@ -429,6 +438,7 @@ function initModel(globals){
         magNode: magNode,
 
         getNodes: getNodes,
+        getHighlights: getHighlights,
         getEdges: getEdges,
         getFaces: getFaces,
         getCreases: getCreases,

@@ -695,14 +695,24 @@ function initControls(globals){
 
     function enableNodeFixing(val){
         globals.nodeFixingEnabled = val;
-        enableInteraction(val);
+        if (val) {
+            enableInteraction(val);
+            if (globals.magnetizeEnabled) {
+                enableMagnetize(false);
+                $("#magnetizeEnabled").prop('checked', false);
+            }
+        }
     }
     setCheckbox($("#magnetizeEnabled"), globals.magnetizeEnabled, enableMagnetize);
 
     function enableMagnetize(val){
         globals.magnetizeEnabled = val;
-        if (val == true) {
+        if (val) {
             enableInteraction(val);
+        }
+        if (globals.nodeFixingEnabled && val) {
+            enableNodeFixing(false);
+            $("#nodeFixingEnabled").prop('checked', false);
         }
     }
 

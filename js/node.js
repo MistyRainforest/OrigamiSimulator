@@ -28,6 +28,12 @@ function Node(position, index){
 
 Node.prototype.setFixed = function(fixed){
     this.fixed = fixed;
+    if (fixed) {
+        globals.model.getHighlights()[this.getIndex()].material.opacity = 1;
+    }
+    else {
+        globals.model.getHighlights()[this.getIndex()].material.opacity = 0;
+    }
     // if (fixed) {
     //     this.object3D.material = nodeMaterialFixed;
     //     this.object3D.geometry = nodeFixedGeo;
