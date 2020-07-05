@@ -32,7 +32,10 @@ Node.prototype.setFixed = function(fixed){
         globals.model.getHighlights()[this.getIndex()].material.opacity = 1;
     }
     else {
-        globals.model.getHighlights()[this.getIndex()].material.opacity = 0;
+        if (!this.magnetized) {
+            globals.model.getHighlights()[this.getIndex()].material.opacity = 0;
+        }
+
     }
     // if (fixed) {
     //     this.object3D.material = nodeMaterialFixed;
@@ -51,7 +54,13 @@ Node.prototype.isFixed = function(){
 };
 
 
-
+Node.prototype.setMagnetized= function(val) {
+    this.magnetized = val;
+    if (val) {
+        globals.model.getHighlights()[this.getIndex()].material.opacity = 1;
+        globals.model.getHighlights()[this.getIndex()].material.color.setHex(0x00ff00);
+    }
+};
 
 //forces
 //Mag Integration Comment: addition of external force removed by creator?

@@ -62,7 +62,7 @@ function init3DUI(globals) {
         }  else if (isDragging && highlightedObj){
             if (!draggingNode) {
                 if (globals.magnetizeEnabled) {
-                    highlightedObj.magnetized = 1;
+                    globals.model.getNodes()[highlightedObj.getIndex()].setMagnetized(1);
                 }
                 globals.model.magNode = highlightedObj.getIndex();
                 draggingNode = highlightedObj;
