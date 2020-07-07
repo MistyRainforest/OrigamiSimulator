@@ -1094,10 +1094,7 @@
         <span class="label-slider">Fold Percent : </span><div class="flat-slider ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"></div>
         <input value="" placeholder="" class="float form-control" type="text">&nbsp;&nbsp;%
     </div>
-    <div class="sliderInput floatRight" id="magStrength">
-        <span class="label-slider">Magnet Strength : </span><div class="flat-slider ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"></div>
-        <input value="" placeholder="" class="float form-control" type="text">&nbsp;&nbsp;%
-    </div><br/><br/>
+    <br/><br/>
     <!--<b>Simulation Type:</b><br/>-->
     <!--<div class="indent">-->
         <!--<label class="radio">-->
@@ -1185,6 +1182,35 @@
                 <div class="fullWidth alignRight">
                     <a href="#" id="shouldCenterGeo" class="displayBlock btn btn-lg btn-default">Re-center geometry</a>
                 </div>
+            </div>
+        </div>
+    </div><br/>
+    <div class="fullWidth">
+        <a href="#" class="seeMore closed" data-id="magneticForceSettings"><span class="fui-triangle-down"></span><b>Magnetic Force Settings:</b></a><br/>
+        <div id="magneticForceSettings" class="fullWidth hide">
+            <div>
+                <div class="sliderInput floatRight" id="magStrength">
+                    <span class="label-slider">Magnet Strength : </span><div class="flat-slider ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"></div>
+                    <input value="" placeholder="" class="float form-control" type="text">&nbsp;&nbsp;%
+                </div>
+                <div class="inlineBlock fullWidth">
+                    <label style="margin-right:40px" class="checkbox floatRight" for="magnetizeXaxis">
+                        <input id="magnetizeXaxis" data-toggle="checkbox" class="custom-checkbox layersSelector" type="checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+                        magnetizeXaxis
+                    </label>
+                </div><br/>
+                <div class="inlineBlock fullWidth">
+                    <label style="margin-right:40px" class="checkbox floatRight" for="magnetizeYaxis">
+                        <input id="magnetizeYaxis" data-toggle="checkbox" class="custom-checkbox layersSelector" type="checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+                        magnetizeYaxis
+                    </label>
+                </div><br/>
+                <div class="inlineBlock fullWidth">
+                    <label style="margin-right:40px" class="checkbox floatRight" for="magnetizeZaxis">
+                        <input id="magnetizeZaxis" data-toggle="checkbox" class="custom-checkbox layersSelector" type="checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+                        magnetizeZaxis
+                    </label>
+                </div><br/>
             </div>
         </div>
     </div><br/>

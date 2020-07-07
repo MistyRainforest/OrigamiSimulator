@@ -21,8 +21,9 @@ function Node(position, index){
     this.fixed = false;
     this.magnetized = 0;
 
-    this.mag = new THREE.Vector3(0,0,0);
 
+    this.mag = null;
+    this.magDefault = true;
     // this.render(new THREE.Vector3(0,0,0));
 }
 
@@ -56,6 +57,10 @@ Node.prototype.isFixed = function(){
 
 Node.prototype.setMagnetized= function(val) {
     this.magnetized = val;
+    if (globals.magDirection) {
+        this.magDefault = false;
+        this.mag = globals.magDirection;
+    }
     if (val) {
         globals.model.getHighlights()[this.getIndex()].material.opacity = 1;
         globals.model.getHighlights()[this.getIndex()].material.color.setHex(0x00ff00);
@@ -82,8 +87,9 @@ Node.prototype.getMagneticForce = function() {
     }
     otherNode = globals.model.getNodes()[globals.model.magNode];
     otherNode.mag = this.getPosition().sub(otherNode.getPosition()).normalize();
-    this.mag = otherNode.mag.multiplyScalar(-1);
-    this.mag = this.getPosition().multiplyScalar(1);
+    if (this.magDefault) {
+        this.mag = otherNode.mag.multiplyScalar(-1);
+    }
     p = new THREE.Vector3(this.getPosition().x - (otherNode.getPosition().x),
         this.getPosition().y - otherNode.getPosition().y,
         this.getPosition().z - otherNode.getPosition().z);

@@ -716,6 +716,43 @@ function initControls(globals){
         }
     }
 
+    setCheckbox($("#magnetizeXaxis"), globals.magDirection, setMagDirectionX);
+    setCheckbox($("#magnetizeYaxis"), globals.magDirection, setMagDirectionY);
+    setCheckbox($("#magnetizeZaxis"), globals.magDirection, setMagDirectionZ);
+
+    function setMagDirectionX(val) {
+        if (val) {
+            globals.magDirection = new THREE.Vector3(0,1,0);
+
+        } else {
+            globals.magDirection = false;
+        }
+        $("#magnetizeYaxis").prop('checked', false);
+        $("#magnetizeZaxis").prop('checked', false);
+    }
+    function setMagDirectionY(val) {
+        if (val) {
+            globals.magDirection = new THREE.Vector3(1,0,0);
+
+        } else {
+            globals.magDirection = false;
+        }
+        $("#magnetizeXaxis").prop('checked', false);
+        $("#magnetizeZaxis").prop('checked', false);
+    }
+    function setMagDirectionZ(val) {
+        if (val) {
+            globals.magDirection = new THREE.Vector3(0,0,1);
+
+        } else {
+            globals.magDirection = false;
+        }
+        $("#magnetizeYaxis").prop('checked', false);
+        $("#magnetizeXaxis").prop('checked', false);
+    }
+
+
+
     setLink("#grabToggle", function(){
         enableInteraction(true);
     });
