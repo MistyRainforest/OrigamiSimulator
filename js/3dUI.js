@@ -13,6 +13,7 @@ function init3DUI(globals) {
     var draggingNodeFixed = false;
     var mouseDown = false;
     var highlightedObj;
+    var originNode;
 
     var highlighter1 = new Node(new THREE.Vector3());
     highlighter1.setTransparent();
@@ -23,9 +24,16 @@ function init3DUI(globals) {
 
     document.addEventListener('mousedown', function(){
         mouseDown = true;
+        if (globals.nodeToNode) {
+            originNode = highlightedObj;
+            globals.threeView.enableControls(false);
+        }
     }, false);
     document.addEventListener('mouseup', function(e){
         isDragging = false;
+        if (globals.nodeToNode && (highlightedObj != null)) {
+            originNode.magToNode = highlightedObj.getIndex();
+        }
         if (draggingNode){
             if(!globals.nodeFixingEnabled) {
                 draggingNode.setFixed(draggingNodeFixed);
@@ -37,6 +45,9 @@ function init3DUI(globals) {
             setHighlightedObj(null);
             globals.shouldCenterGeo = true;
         }
+        if (globals.nodeToNode) {
+            globals.threeView.enableControls(true);
+        }
         mouseDown = false;
     }, false);
     document.addEventListener( 'mousemove', mouseMove, false );
@@ -44,6 +55,9 @@ function init3DUI(globals) {
 
         if (mouseDown) {
             isDragging = true;
+            if (globals.nodeToNode) {
+                isDragging = false;
+            }
         }
 
         if (!globals.userInteractionEnabled) return;

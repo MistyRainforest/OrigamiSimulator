@@ -86,6 +86,7 @@ function initGlobals(){
         magnetizeEnabled: false,
         vrEnabled: false,
         magDirection: false,
+        nodeToNode: false,
 
         numSteps: 100,
 

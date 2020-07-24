@@ -430,6 +430,7 @@
         void main(){
             vec2 fragCoord = gl_FragCoord.xy;
             vec2 scaledFragCoord = fragCoord/u_textureDim;
+            int f = 0;
 
             vec3 lastPosition = texture2D(u_lastPosition, scaledFragCoord).xyz;
 
@@ -586,9 +587,7 @@
                     force -= anglesDiff[1]*normalCrossBC;
                     force += anglesDiff[2]*(normalCrossBC - normalCrossAC);
                 }
-
             }
-
             vec3 nextPosition = force*u_dt*u_dt/mass[0] + 2.0*lastPosition - lastLastPosition;
             gl_FragColor = vec4(nextPosition,nodeError);//position.a has error info
         }
@@ -1209,6 +1208,12 @@
                     <label style="margin-right:40px" class="checkbox floatRight" for="magnetizeZaxis">
                         <input id="magnetizeZaxis" data-toggle="checkbox" class="custom-checkbox layersSelector" type="checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
                         magnetizeZaxis
+                    </label>
+                </div><br/>
+                <div class="inlineBlock fullWidth">
+                    <label style="margin-right:40px" class="checkbox floatRight" for="nodeToNode">
+                        <input id="nodeToNode" data-toggle="checkbox" class="custom-checkbox layersSelector" type="checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+                        nodeToNode
                     </label>
                 </div><br/>
             </div>

@@ -71,6 +71,7 @@ function initModel(globals){
     var indices;
     var nodes = [];
     var highlights = [];
+    var arrows = [];
     var faces = [];
     var edges = [];
     var creases = [];
@@ -244,6 +245,7 @@ function initModel(globals){
         fold = nextFold;
         nodes = [];
         highlights = [];
+        arrows = [];
         edges = [];
         faces = fold.faces_vertices;
         creases = [];
@@ -261,6 +263,16 @@ function initModel(globals){
             highlight = new THREE.Mesh(new THREE.SphereGeometry(0.02,20), new THREE.MeshBasicMaterial({color: 0xff0000, opacity:0, transparent:true}));
             globals.threeView.scene.add(highlight);
             highlights.push(highlight);
+
+            var dir = new THREE.Vector3( 1, 2, 0 );
+            //normalize the direction vector (convert to vector of length 1)
+            dir.normalize();
+            var origin = new THREE.Vector3( 0, 0, 0 );
+            var length = 0.001;
+            var hex = 0x000000;
+            var arrow = new THREE.ArrowHelper( dir, origin, length, hex );
+            globals.threeView.scene.add(arrow);
+            arrows.push(arrow);
         }
         // _nodes[_faces[0][0]].setFixed(true);
         // _nodes[_faces[0][1]].setFixed(true);
@@ -399,6 +411,10 @@ function initModel(globals){
         return highlights;
     }
 
+    function getArrows(){
+        return arrows;
+    }
+
 
     function getEdges(){
         return edges;
@@ -439,6 +455,7 @@ function initModel(globals){
 
         getNodes: getNodes,
         getHighlights: getHighlights,
+        getArrows: getArrows,
         getEdges: getEdges,
         getFaces: getFaces,
         getCreases: getCreases,

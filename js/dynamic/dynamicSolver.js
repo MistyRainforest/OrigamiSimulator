@@ -8,6 +8,7 @@ function initDynamicSolver(globals){
 
     var nodes;
     var highlights;
+    var arrows;
     var edges;
     var faces;
     var creases;
@@ -41,6 +42,7 @@ function initDynamicSolver(globals){
     function syncNodesAndEdges(){
         nodes = globals.model.getNodes();
         highlights = globals.model.getHighlights();
+        arrows = globals.model.getArrows();
         edges = globals.model.getEdges();
         faces = globals.model.getFaces();
         creases = globals.model.getCreases();
@@ -127,6 +129,7 @@ function initDynamicSolver(globals){
         for (var j=0;j<_numSteps;j++){
             updateExternalForces();
             updateHighlightLocation();
+            updateArrowLocation();
             //Mag Integration Comment: All the steps are handled by gpuMath, injecting additional forces outside results in 
             //weird behavior.
             solveStep();
@@ -461,6 +464,12 @@ function initDynamicSolver(globals){
         for (var i=0;i<nodes.length;i++) {
             var position = nodes[i].getPosition();
             highlights[i].position.set(position.x, position.y, position.z);
+        }
+    }
+    function updateArrowLocation() {
+        for (var i=0;i<nodes.length;i++) {
+            var position = nodes[i].getPosition();
+            arrows[i].position.set(position.x, position.y, position.z);
         }
     }
 

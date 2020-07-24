@@ -719,9 +719,24 @@ function initControls(globals){
     setCheckbox($("#magnetizeXaxis"), globals.magDirection, setMagDirectionX);
     setCheckbox($("#magnetizeYaxis"), globals.magDirection, setMagDirectionY);
     setCheckbox($("#magnetizeZaxis"), globals.magDirection, setMagDirectionZ);
+    setCheckbox($("#nodeToNode"), globals.nodeToNode, setNodeToNode);
+
+    function setNodeToNode(val) {
+        if (val) {
+            globals.nodeToNode = true;
+            globals.magDirection = false;
+
+        } else {
+            globals.nodeToNode = false;
+        }
+        $("#magnetizeXaxis").prop('checked', false);
+        $("#magnetizeYaxis").prop('checked', false);
+        $("#magnetizeZaxis").prop('checked', false);
+    }
 
     function setMagDirectionX(val) {
         if (val) {
+            globals.nodeToNode = false;
             globals.magDirection = new THREE.Vector3(0,1,0);
 
         } else {
@@ -729,9 +744,11 @@ function initControls(globals){
         }
         $("#magnetizeYaxis").prop('checked', false);
         $("#magnetizeZaxis").prop('checked', false);
+        $("#nodeToNode").prop('checked', false);
     }
     function setMagDirectionY(val) {
         if (val) {
+            globals.nodeToNode = false;
             globals.magDirection = new THREE.Vector3(1,0,0);
 
         } else {
@@ -739,9 +756,11 @@ function initControls(globals){
         }
         $("#magnetizeXaxis").prop('checked', false);
         $("#magnetizeZaxis").prop('checked', false);
+        $("#nodeToNode").prop('checked', false);
     }
     function setMagDirectionZ(val) {
         if (val) {
+            globals.nodeToNode = false;
             globals.magDirection = new THREE.Vector3(0,0,1);
 
         } else {
@@ -749,6 +768,7 @@ function initControls(globals){
         }
         $("#magnetizeYaxis").prop('checked', false);
         $("#magnetizeXaxis").prop('checked', false);
+        $("#nodeToNode").prop('checked', false);
     }
 
 

@@ -25,6 +25,7 @@ function Node(position, index){
     this.mag = null;
     this.magDefault = true;
     // this.render(new THREE.Vector3(0,0,0));
+    this.magToNode = null;
 }
 
 Node.prototype.setFixed = function(fixed){
@@ -59,11 +60,18 @@ Node.prototype.setMagnetized= function(val) {
     this.magnetized = val;
     if (globals.magDirection) {
         this.magDefault = false;
-        this.mag = globals.magDirection;
+        this.mag = globals.magDirection.clone();
     }
     if (val) {
         globals.model.getHighlights()[this.getIndex()].material.opacity = 1;
         globals.model.getHighlights()[this.getIndex()].material.color.setHex(0x00ff00);
+        if (this.magToNode != null) {
+            globals.model.getArrows()[this.getIndex()].setLength(1, 0.2, 0.02);
+        }
+    } 
+    else {
+        globals.model.getHighlights()[this.getIndex()].material.opacity = 0;
+        globals.model.getArrows()[this.getIndex()].setLength(0.001, 0.0002, 0.00002);
     }
 };
 
@@ -90,6 +98,9 @@ Node.prototype.getMagneticForce = function() {
     if (this.magDefault) {
         this.mag = otherNode.mag.multiplyScalar(-1);
     }
+    if (this.magToNode != null) {
+        this.mag = globals.model.getNodes()[this.magToNode].getPosition().clone().sub(this.getPosition());
+    }
     p = new THREE.Vector3(this.getPosition().x - (otherNode.getPosition().x),
         this.getPosition().y - otherNode.getPosition().y,
         this.getPosition().z - otherNode.getPosition().z);
@@ -106,7 +117,47 @@ Node.prototype.getMagneticForce = function() {
     f3 = p_unit.multiplyScalar(m1.dot(m2));
     f4 = p_unit.multiplyScalar(m1.dot(p_unit)*m2.dot(p_unit)*5);
     f1.add(f2).add(f3).sub(f4);
-    return f1.multiplyScalar(globals.magStrength*50000).multiplyScalar(this.magnetized);
+    var ret = f1.multiplyScalar(globals.magStrength*50000).multiplyScalar(this.magnetized);
+    //globals.model.getHighlights()[this.getIndex()]
+    //globals.model.getArrows()[this.getIndex()].setDirection(ret.clone().normalize());
+    globals.model.getArrows()[this.getIndex()].setDirection(this.mag.clone().normalize());
+    return ret;
+}
+
+Node.prototype.getMagneticForceCall = function() {
+    if (globals.model.magNode == this.getIndex()) {
+        return new THREE.Vector3(0,0,0);
+    }
+    otherNode = globals.model.getNodes()[globals.model.magNode];
+    otherNode.mag = this.getPosition().sub(otherNode.getPosition()).normalize();
+    if (this.magDefault) {
+        this.mag = otherNode.mag.multiplyScalar(-1);
+    }
+    if (this.magToNode != null) {
+        this.mag = globals.model.getNodes()[this.magToNode].getPosition().clone().sub(this.getPosition());
+    }
+    p = new THREE.Vector3(this.getPosition().x - (otherNode.getPosition().x),
+        this.getPosition().y - otherNode.getPosition().y,
+        this.getPosition().z - otherNode.getPosition().z);
+    p_unit = p.clone().normalize();
+    //console.log(otherNode);
+    //onsole.log(this);
+    m1 = this.mag;
+    m2 = otherNode.mag;
+
+    K = (3.0*Math.pow(0.1, 7)) / Math.pow(p.length(), 4);
+
+    f1 = m2.multiplyScalar(m1.dot(p_unit)*K);
+    f2 = m1.multiplyScalar(m2.dot(p_unit));
+    f3 = p_unit.multiplyScalar(m1.dot(m2));
+    f4 = p_unit.multiplyScalar(m1.dot(p_unit)*m2.dot(p_unit)*5);
+    f1.add(f2).add(f3).sub(f4);
+    var ret = f1.multiplyScalar(globals.magStrength*50000).multiplyScalar(this.magnetized);
+    //globals.model.getHighlights()[this.getIndex()]
+    //globals.model.getArrows()[this.getIndex()].setDirection(ret.clone().normalize());
+    console.log(this.mag);
+    globals.model.getArrows()[this.getIndex()].setDirection(this.mag.clone().normalize());
+    return ret;
 }
 
 Node.prototype.addCrease = function(crease){
