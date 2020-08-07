@@ -3,6 +3,7 @@
  */
 
 var nodeMaterial = new THREE.MeshBasicMaterial({color: 0x000000, side:THREE.DoubleSide});
+
 var transparentMaterial = new THREE.MeshBasicMaterial({color: 0xffffff, opacity:0.5, transparent:true});
 var transparentVRMaterial = new THREE.MeshBasicMaterial({color: 0xffffff, opacity:0.8, transparent:true});
 
@@ -64,13 +65,14 @@ Node.prototype.setMagnetized= function(val) {
     }
     if (val) {
         globals.model.getHighlights()[this.getIndex()].material.opacity = 1;
-        globals.model.getHighlights()[this.getIndex()].material.color.setHex(0x00ff00);
+        globals.model.getHighlights()[this.getIndex()].material.color.setHex(0xff0000);
         if (this.magToNode != null) {
             globals.model.getArrows()[this.getIndex()].setLength(1, 0.2, 0.02);
         }
     } 
     else {
         globals.model.getHighlights()[this.getIndex()].material.opacity = 0;
+        globals.model.getHighlights()[this.getIndex()].material.color.setHex(0x00ff00);
         globals.model.getArrows()[this.getIndex()].setLength(0.001, 0.0002, 0.00002);
     }
 };
@@ -120,7 +122,8 @@ Node.prototype.getMagneticForce = function() {
     var ret = f1.multiplyScalar(globals.magStrength*50000).multiplyScalar(this.magnetized);
     //globals.model.getHighlights()[this.getIndex()]
     //globals.model.getArrows()[this.getIndex()].setDirection(ret.clone().normalize());
-    globals.model.getArrows()[this.getIndex()].setDirection(this.mag.clone().normalize());
+    this.setDirection(this.mag.clone().normalize());
+    globals.model.getArrows()[this.getIndex()].setDirection(ret.clone().normalize());
     return ret;
 }
 
@@ -156,9 +159,36 @@ Node.prototype.getMagneticForceCall = function() {
     //globals.model.getHighlights()[this.getIndex()]
     //globals.model.getArrows()[this.getIndex()].setDirection(ret.clone().normalize());
     console.log(this.mag);
-    globals.model.getArrows()[this.getIndex()].setDirection(this.mag.clone().normalize());
+    setDirection(this.mag.clone().normalize());
     return ret;
 }
+
+Node.prototype.setDirection = function ( dir ) {
+
+    var arrow = globals.model.getHighlights()[this.getIndex()];
+    const _axis = new THREE.Vector3();
+
+	// dir is assumed to be normalized
+
+	if ( dir.y > 0.99999 ) {
+
+		arrow.quaternion.set( 0, 0, 0, 1 );
+
+	} else if ( dir.y < - 0.99999 ) {
+
+		arrow.quaternion.set( 1, 0, 0, 0 );
+
+	} else {
+
+		_axis.set( dir.z, 0, - dir.x ).normalize();
+
+		const radians = Math.acos( dir.y );
+
+		arrow.quaternion.setFromAxisAngle( _axis, radians );
+
+	}
+
+};
 
 Node.prototype.addCrease = function(crease){
     this.creases.push(crease);

@@ -25,7 +25,7 @@ function init3DUI(globals) {
     document.addEventListener('mousedown', function(){
         mouseDown = true;
         if (globals.nodeToNode) {
-            originNode = highlightedObj;
+            originNode = highlightedObj;9
             globals.threeView.enableControls(false);
         }
     }, false);
@@ -36,7 +36,7 @@ function init3DUI(globals) {
         }
         if (draggingNode){
             if(!globals.nodeFixingEnabled) {
-                draggingNode.setFixed(draggingNodeFixed);
+                draggingNode.setFixed(false);
                 globals.fixedHasChanged = true;
             }
             draggingNode = null;
@@ -77,6 +77,8 @@ function init3DUI(globals) {
             if (!draggingNode) {
                 if (globals.magnetizeEnabled) {
                     globals.model.getNodes()[highlightedObj.getIndex()].setMagnetized(1);
+                } else {
+                    globals.model.getNodes()[highlightedObj.getIndex()].setMagnetized(0);
                 }
                 globals.model.magNode = highlightedObj.getIndex();
                 draggingNode = highlightedObj;

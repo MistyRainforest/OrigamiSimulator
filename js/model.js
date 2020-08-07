@@ -20,6 +20,14 @@ function initModel(globals){
     var borderLines = new THREE.LineSegments(null, lineMaterial);
     var magNode = 0;
 
+    var sphereGeom = new THREE.SphereGeometry(0.02,20);
+    sphereGeom.faces.forEach(function(face){ // loop through faces
+        if (face.normal.y > 0) // check y-coordinate of a face's normal
+        face.color.setHex(0xFF0000); // set the color of the face (red)
+        else
+        face.color.setHex(0x0000FF); // set the color of the face (black)
+    })
+
     var lines = {
         U: hingeLines,
         M: mountainLines,
@@ -260,7 +268,7 @@ function initModel(globals){
 
         for (var i=0;i<_vertices.length;i++){
             nodes.push(new Node(_vertices[i].clone(), nodes.length));
-            highlight = new THREE.Mesh(new THREE.SphereGeometry(0.02,20), new THREE.MeshBasicMaterial({color: 0xff0000, opacity:0, transparent:true}));
+            var highlight = new THREE.Mesh(sphereGeom, new THREE.MeshBasicMaterial({vertexColors: THREE.FaceColors, opacity:0, transparent:true}));
             globals.threeView.scene.add(highlight);
             highlights.push(highlight);
 
