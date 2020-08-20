@@ -46,6 +46,7 @@ function initDynamicSolver(globals){
         edges = globals.model.getEdges();
         faces = globals.model.getFaces();
         creases = globals.model.getCreases();
+        magnetizedNodes = [];
 
         positions = globals.model.getPositionsArray();
         colors = globals.model.getColorsArray();
@@ -127,7 +128,11 @@ function initDynamicSolver(globals){
 
         if (_numSteps === undefined) _numSteps = globals.numSteps;
         for (var j=0;j<_numSteps;j++){
-            updateExternalForces();
+            magnetizedNodes = updateExternalForces();
+
+
+            var $magData = $("#globalMagData");
+            $magData.html(makeTableHTML(magnetizedNodes));
             updateHighlightLocation();
             updateArrowLocation();
             //Mag Integration Comment: All the steps are handled by gpuMath, injecting additional forces outside results in 
@@ -135,6 +140,27 @@ function initDynamicSolver(globals){
             solveStep();
         }
         render();
+    }
+
+    function makeTableHTML(myArray) {
+        var result = "<table border=1>";
+        result += "<tr>";
+        result += '<td style="table-layout:fixed;width:75px;overflow:hidden;">'+"Index"+"</td>";
+        result += '<td style="table-layout:fixed;width:75px;overflow:hidden;">'+"X"+"</td>";
+        result += '<td style="table-layout:fixed;width:75px;overflow:hidden;">'+"Y"+"</td>";
+        result += '<td style="table-layout:fixed;width:75px;overflow:hidden;">'+"Z"+"</td>";
+        result += "</tr>";
+
+        for(var i=0; i<myArray.length; i++) {
+            result += "<tr>";
+            for(var j=0; j<myArray[i].length; j++){
+                result += '<td style="table-layout:fixed;width:75px;overflow:hidden;">'+myArray[i][j].toString().slice(0, 8)+"</td>";
+            }
+            result += "</tr>";
+        }
+        result += "</table>";
+    
+        return result;
     }
 
     function solveStep(){
@@ -177,6 +203,7 @@ function initDynamicSolver(globals){
     }
 
     var $errorOutput = $("#globalError");
+    var $magData = $("#globalMagData");
 
     function getAvgPosition(){
         var xavg = 0;
@@ -450,14 +477,24 @@ function initDynamicSolver(globals){
     }
     //Mag Integration Comment: Called once during start up an not called again after
     function updateExternalForces(){
+        ret = []
         for (var i=0;i<nodes.length;i++){
             var externalForce = nodes[i].getMagneticForce();
+            if (nodes[i].magnetized == 1) {
+                temp = [];
+                temp.push(i);
+                temp.push(externalForce.x);
+                temp.push(externalForce.y);
+                temp.push(externalForce.z);
+                ret.push(temp);
+            }
             //var externalForce = new THREE.Vector3(0,0,0);
             externalForces[4*i] = externalForce.x;
             externalForces[4*i+1] = externalForce.y;
             externalForces[4*i+2] = externalForce.z;
         }
         globals.gpuMath.initTextureFromData("u_externalForces", textureDim, textureDim, "FLOAT", externalForces, true);
+        return ret;
     }
 
     function updateHighlightLocation() {
